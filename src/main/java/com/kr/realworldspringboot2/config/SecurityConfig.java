@@ -2,6 +2,7 @@ package com.kr.realworldspringboot2.config;
 
 
 import com.kr.realworldspringboot2.member.AuthUserDetailsService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -18,18 +19,11 @@ public class SecurityConfig {
         return new BCryptPasswordEncoder();
     }
 
-    @Bean
-    public UserDetailsService userDetailsService(){
-        return new AuthUserDetailsService();
-    }
+    @Autowired
+    private AuthUserDetailsService authUserDetailsService;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        AuthenticationManagerBuilder authenticationManagerBuilder = http.getSharedObject(AuthenticationManagerBuilder.class);
-        authenticationManagerBuilder
-                .userDetailsService(userDetailsService())
-                .passwordEncoder(passwordEncoder());
-
         http
             .csrf().disable()
             .formLogin().permitAll()
@@ -41,7 +35,7 @@ public class SecurityConfig {
             .antMatchers("/admin").hasRole("ADMIN")
             .anyRequest().authenticated()
             .and()
-            .authenticationManager(authenticationManagerBuilder.build());
+            .userDetailsService(authUserDetailsService);
 
         return http.build();
     }
