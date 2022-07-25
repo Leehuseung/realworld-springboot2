@@ -1,26 +1,36 @@
 package com.kr.realworldspringboot2.member;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class AuthUserDetailsService implements UserDetailsService {
 
+    private final MemberRepository memberRepository;
+
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Set<GrantedAuthority> set = new HashSet<>();
-        set.add(new SimpleGrantedAuthority("ROLE_USER"));
-        User user = new User("user","$2a$10$0W1VWLXgCZXsMUHbDXoJj.NiQgKl21UaZVHs331eArkI7UfHcjIaO",set);
-        return user;
+
+        Optional<Member> result = memberRepository.findByEmail(username);
+
+        Member member = result.orElseThrow(() -> {
+            throw new UsernameNotFoundException("Check Email");
+        });
+
+        AuthMemberDTO authMemberDTO = new AuthMemberDTO(
+                member.getEmail(),
+                member.getPassword(),
+                member.getRoles().stream().map(role -> new SimpleGrantedAuthority("ROLE_"+role.name()))
+                                 .collect(Collectors.toSet()));
+        authMemberDTO.setUsername(member.getUsername());
+        return authMemberDTO;
     }
 }
