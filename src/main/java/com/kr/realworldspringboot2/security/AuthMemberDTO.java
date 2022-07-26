@@ -1,4 +1,4 @@
-package com.kr.realworldspringboot2.member;
+package com.kr.realworldspringboot2.security;
 
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;

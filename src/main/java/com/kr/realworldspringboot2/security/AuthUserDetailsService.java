@@ -1,5 +1,7 @@
-package com.kr.realworldspringboot2.member;
+package com.kr.realworldspringboot2.security;
 
+import com.kr.realworldspringboot2.member.Member;
+import com.kr.realworldspringboot2.member.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
