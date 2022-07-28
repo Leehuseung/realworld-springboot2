@@ -7,9 +7,7 @@ import org.springframework.lang.Nullable;
 
 import javax.persistence.*;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 @Entity
 @Builder
@@ -24,8 +22,10 @@ public class Member extends BaseEntity{
     @Column(name = "MEMBER_ID")
     private Long id;
     @NotNull
+    @Column(unique = true)
     private String email;
     @NotNull
+    @Column(unique = true)
     private String username;
     @NotNull
     private String password;
