@@ -27,6 +27,10 @@ public class ApiLoginFilter extends AbstractAuthenticationProcessingFilter {
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException, IOException, ServletException {
         String body = request.getReader().lines().collect(Collectors.joining());
 
+        if(body.equals("")){
+            throw new BadCredentialsException("body cannot be null");
+        }
+
         JSONObject jo = (JSONObject) JSONValue.parse(body);
         JSONObject user = (JSONObject) jo.get("user");
 
@@ -34,7 +38,7 @@ public class ApiLoginFilter extends AbstractAuthenticationProcessingFilter {
         String email = user.getAsString("email");
         String pw = user.getAsString("password");
 
-        if(email == null){
+        if(email == null || email.equals("")){
             throw new BadCredentialsException("email cannot be null");
         }
 
