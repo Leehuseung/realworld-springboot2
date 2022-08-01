@@ -23,6 +23,7 @@ public class JWTUtil {
     private String SECURITY_KEY = "realworldSecret";
 
     private long expire = 60 * 24 * 30;
+    private final String DEFAULT_RULE = "ROLE_USER";
 
     public String generateToken(Authentication authentication) {
         String authorities = authentication.getAuthorities().stream()
@@ -35,6 +36,22 @@ public class JWTUtil {
                     .setExpiration(Date.from(ZonedDateTime.now()
                             .plusMinutes(expire).toInstant()))
                     .claim("roles", authorities)
+                    .signWith(SignatureAlgorithm.HS256, SECURITY_KEY.getBytes("UTF-8"))
+                    .compact();
+        } catch (Exception e){
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public String generateTokenByEmail(String email) {
+        try{
+            return Jwts.builder()
+                    .setSubject(email)
+                    .setIssuedAt(new Date())
+                    .setExpiration(Date.from(ZonedDateTime.now()
+                            .plusMinutes(expire).toInstant()))
+                    .claim("roles", DEFAULT_RULE)
                     .signWith(SignatureAlgorithm.HS256, SECURITY_KEY.getBytes("UTF-8"))
                     .compact();
         } catch (Exception e){
@@ -68,17 +85,4 @@ public class JWTUtil {
             return null;
         }
     }
-
-//    public String getEmailbyHeader(String header) {
-//        if(header == null){
-//            return null;
-//        }
-//        String token = getToken(header);
-//        return validateAndExtract(token);
-//    }
-
-    public String getToken(String authorization) {
-        return authorization.substring(6);
-    }
 }
-
