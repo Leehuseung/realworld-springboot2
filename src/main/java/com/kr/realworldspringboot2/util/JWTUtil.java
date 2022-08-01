@@ -35,7 +35,7 @@ public class JWTUtil {
                     .setIssuedAt(new Date())
                     .setExpiration(Date.from(ZonedDateTime.now()
                             .plusMinutes(expire).toInstant()))
-                    .claim("roles", authorities)
+                    .claim("roles", DEFAULT_RULE)
                     .signWith(SignatureAlgorithm.HS256, SECURITY_KEY.getBytes("UTF-8"))
                     .compact();
         } catch (Exception e){

@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class AuthUserDetailsService implements UserDetailsService {
-
+    private final String DEFAULT_ROLE = "ROLE_USER";
     private final MemberRepository memberRepository;
 
     @Override
@@ -30,7 +30,7 @@ public class AuthUserDetailsService implements UserDetailsService {
         AuthMemberDTO authMemberDTO = new AuthMemberDTO(
                 member.getEmail(),
                 member.getPassword(),
-                member.getRoles().stream().map(role -> new SimpleGrantedAuthority("ROLE_"+role.name()))
+                member.getRoles().stream().map(role -> new SimpleGrantedAuthority(DEFAULT_ROLE))
                                  .collect(Collectors.toSet()));
         authMemberDTO.setUsername(member.getUsername());
         return authMemberDTO;
