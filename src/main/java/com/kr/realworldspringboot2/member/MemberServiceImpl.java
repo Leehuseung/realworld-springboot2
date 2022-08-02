@@ -11,7 +11,7 @@ class MemberServiceImpl implements MemberService {
     private final MemberRepository memberRepository;
 
     @Override
-    public Long registerMember(RegisterMemberDTO registerMemberDTO) {
+    public long registerMember(RegisterMemberDTO registerMemberDTO) {
         if(memberRepository.findByEmail(registerMemberDTO.getEmail()).isPresent()){
             throw new DuplicateRegisterException("email");
         }
@@ -29,5 +29,19 @@ class MemberServiceImpl implements MemberService {
     public MemberDTO findById(long id) {
         Member member = memberRepository.findById(id).get();
         return memberToDTO(member);
+    }
+
+    @Override
+    public MemberDTO findByEmail(String email) {
+        Member member = memberRepository.findByEmail(email).get();
+        return memberToDTO(member);
+    }
+
+    @Override
+    public long updateMember(UpdateMemberDTO updateMemberDTO) {
+        Member member = memberRepository.findById(updateMemberDTO.getId()).get();
+        updateMemberDTO.applyTo(member);
+        memberRepository.save(member);
+        return member.getId();
     }
 }

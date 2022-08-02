@@ -2,9 +2,14 @@ package com.kr.realworldspringboot2.member;
 
 interface MemberService {
 
-    Long registerMember(RegisterMemberDTO registerMemberDTO);
+    long registerMember(RegisterMemberDTO registerMemberDTO);
 
     MemberDTO findById(long id);
+
+    MemberDTO findByEmail(String email);
+
+    long updateMember(UpdateMemberDTO updateMemberDTO);
+
 
     default Member registerMemberDTOtoEntity(RegisterMemberDTO registerMemberDTO){
         return Member.builder()

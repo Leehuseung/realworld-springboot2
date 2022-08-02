@@ -3,9 +3,8 @@ package com.kr.realworldspringboot2.member;
 import com.kr.realworldspringboot2.util.JWTUtil;
 import lombok.RequiredArgsConstructor;
 import net.minidev.json.JSONObject;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
@@ -25,6 +24,24 @@ public class MemberController {
 
         return dtoToJson(memberDTO);
     }
+
+    @GetMapping("/api/user")
+    public JSONObject getCurrentMember(@RequestAttribute Authentication authentication){
+        MemberDTO memberDTO = memberService.findByEmail(authentication.getName());
+        String token = jwtUtil.generateTokenByEmail(memberDTO.getEmail());
+        memberDTO.setToken(token);
+        return dtoToJson(memberDTO);
+    }
+
+    @PutMapping("/api/user")
+    public JSONObject updateMember(@RequestAttribute long id,
+                                   @RequestBody @Valid UpdateMemberDTO updateMemberDTO){
+        updateMemberDTO.setId(id);
+        Long updateId = memberService.updateMember(updateMemberDTO);
+        MemberDTO memberDTO = memberService.findById(updateId);
+        return dtoToJson(memberDTO);
+    }
+
 
     public JSONObject dtoToJson(MemberDTO memberDTO){
         JSONObject jsonObject = new JSONObject();
