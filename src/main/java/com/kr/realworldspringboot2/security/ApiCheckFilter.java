@@ -1,6 +1,7 @@
 package com.kr.realworldspringboot2.security;
 
 import com.kr.realworldspringboot2.util.JWTUtil;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.util.StringUtils;
@@ -17,6 +18,8 @@ public class ApiCheckFilter extends OncePerRequestFilter {
     public ApiCheckFilter(JWTUtil jwtUtil) {
         this.jwtUtil = jwtUtil;
     }
+    @Value("${jwt.start}")
+    String TOKEN_START;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
@@ -30,7 +33,7 @@ public class ApiCheckFilter extends OncePerRequestFilter {
 
     private boolean hasAuthHeader(HttpServletRequest request) {
         String authHeader = request.getHeader("Authorization");
-        if(StringUtils.hasText(authHeader) && authHeader.startsWith("Bearer ")){
+        if(StringUtils.hasText(authHeader) && authHeader.startsWith(TOKEN_START + " ")){
             return true;
         }
         return false;
