@@ -4,6 +4,7 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.impl.DefaultClaims;
 import io.jsonwebtoken.impl.DefaultJws;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -20,9 +21,14 @@ import java.util.stream.Collectors;
 @Component
 public class JWTUtil {
 
-    private String SECURITY_KEY = "realworldSecret";
+    @Value("${jwt.start}")
+    String TOKEN_START;
 
-    private long expire = 60 * 24 * 30;
+    @Value("${jwt.secret}")
+    private String SECURITY_KEY;
+
+    @Value("${jwt.token-validity-in-seconds}")
+    private long TOKEN_EXPIRE_SECONDS;
     private final String DEFAULT_RULE = "ROLE_USER";
 
     public String generateToken(Authentication authentication) {
@@ -34,7 +40,7 @@ public class JWTUtil {
                     .setSubject(authentication.getName())
                     .setIssuedAt(new Date())
                     .setExpiration(Date.from(ZonedDateTime.now()
-                            .plusMinutes(expire).toInstant()))
+                            .plusMinutes(TOKEN_EXPIRE_SECONDS).toInstant()))
                     .claim("roles", DEFAULT_RULE)
                     .signWith(SignatureAlgorithm.HS256, SECURITY_KEY.getBytes("UTF-8"))
                     .compact();
@@ -50,7 +56,7 @@ public class JWTUtil {
                     .setSubject(email)
                     .setIssuedAt(new Date())
                     .setExpiration(Date.from(ZonedDateTime.now()
-                            .plusMinutes(expire).toInstant()))
+                            .plusMinutes(TOKEN_EXPIRE_SECONDS).toInstant()))
                     .claim("roles", DEFAULT_RULE)
                     .signWith(SignatureAlgorithm.HS256, SECURITY_KEY.getBytes("UTF-8"))
                     .compact();
@@ -85,4 +91,10 @@ public class JWTUtil {
             return null;
         }
     }
+
+    public String getToken(String authorization) {
+        return authorization.substring(TOKEN_START.length()+1);
+    }
+
+
 }
