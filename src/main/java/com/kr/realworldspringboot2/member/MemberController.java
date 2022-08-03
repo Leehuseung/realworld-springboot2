@@ -37,8 +37,7 @@ public class MemberController {
     public JSONObject updateMember(@RequestAttribute long id,
                                    @RequestBody @Valid UpdateMemberDTO updateMemberDTO){
         updateMemberDTO.setId(id);
-        Long updateId = memberService.updateMember(updateMemberDTO);
-        MemberDTO memberDTO = memberService.findById(updateId);
+        MemberDTO memberDTO = memberService.updateMember(updateMemberDTO);
         return dtoToJson(memberDTO);
     }
 

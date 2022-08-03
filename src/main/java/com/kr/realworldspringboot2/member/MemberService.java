@@ -8,7 +8,7 @@ interface MemberService {
 
     MemberDTO findByEmail(String email);
 
-    long updateMember(UpdateMemberDTO updateMemberDTO);
+    MemberDTO updateMember(UpdateMemberDTO updateMemberDTO);
 
 
     default Member registerMemberDTOtoEntity(RegisterMemberDTO registerMemberDTO){

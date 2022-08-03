@@ -25,7 +25,7 @@ public class MemberServiceTest {
 
     @Test
     @DisplayName("사용자 등록 테스트")
-    public void member_registration_test() {
+    public void member_registration() {
         //given
         Member member = Member.builder()
                 .id(1l)
@@ -48,7 +48,7 @@ public class MemberServiceTest {
     
     @Test
     @DisplayName("사용자 조회 테스트")
-    public void member_get_test() {
+    public void member_get() {
         //given
         Member member = Member.builder()
                 .id(1l)
@@ -67,5 +67,34 @@ public class MemberServiceTest {
         assertEquals(memberDTO.getEmail(),"test06@realworld.com");
         assertEquals(memberDTO.getBio(),null);
         assertEquals(memberDTO.getImage(),null);
+    }
+
+    @Test
+    @DisplayName("사용자 업데이트 테스트")
+    public void member_update(){
+
+        UpdateMemberDTO updateMemberDTO = new UpdateMemberDTO(
+                "test06","test06@realworld.com","bio","image"
+        );
+
+        //given
+        Member member = Member.builder()
+                .id(1l)
+                .username("test06")
+                .password("1111")
+                .email("test06@realworld.com")
+                .build();
+
+        when(memberRepository.findById(any())).thenReturn(Optional.of(member));
+
+        //when
+        MemberDTO memberDTO = memberService.updateMember(updateMemberDTO);
+
+        //then
+        assertEquals(memberDTO.getUsername(),"test06");
+        assertEquals(memberDTO.getEmail(),"test06@realworld.com");
+        assertEquals(memberDTO.getToken(),null);
+        assertEquals(memberDTO.getBio(),"bio");
+        assertEquals(memberDTO.getImage(),"image");
     }
 }

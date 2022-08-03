@@ -35,6 +35,15 @@ public class UpdateMemberDTO {
         return user.getImage();
     }
 
+    public UpdateMemberDTO(String username, String email, String bio, String image) {
+        UpdateMemberDTO.User userDTO = new UpdateMemberDTO.User();
+        userDTO.setUsername(username);
+        userDTO.setEmail(email);
+        userDTO.setBio(bio);
+        userDTO.setImage(image);
+        this.user = userDTO;
+    }
+
     void applyTo(Member m) {
         if(this.user.getUsername() != null) m.setUsername(this.user.getUsername());
         if(this.user.getEmail() != null) m.setEmail(this.user.getEmail());

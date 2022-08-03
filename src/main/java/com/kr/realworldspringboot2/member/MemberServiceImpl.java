@@ -38,10 +38,10 @@ class MemberServiceImpl implements MemberService {
     }
 
     @Override
-    public long updateMember(UpdateMemberDTO updateMemberDTO) {
+    public MemberDTO updateMember(UpdateMemberDTO updateMemberDTO) {
         Member member = memberRepository.findById(updateMemberDTO.getId()).get();
         updateMemberDTO.applyTo(member);
         memberRepository.save(member);
-        return member.getId();
+        return memberToDTO(member);
     }
 }
