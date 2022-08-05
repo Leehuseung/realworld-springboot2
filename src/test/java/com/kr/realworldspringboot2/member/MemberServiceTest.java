@@ -7,6 +7,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.Optional;
 
@@ -19,6 +20,8 @@ public class MemberServiceTest {
 
     @Mock
     MemberRepository memberRepository;
+    @Mock
+    PasswordEncoder passwordEncoder;
 
     @InjectMocks
     MemberServiceImpl memberService;
@@ -35,6 +38,7 @@ public class MemberServiceTest {
                 .build();
 
         when(memberRepository.save(any())).thenReturn(member);
+        when(passwordEncoder.encode(any())).thenReturn("$2a$10$CaJDIhvBaDXBYnMXff2fIOEfI.zycN83WudeZz94tYWuuZUMBuGvS");
 
         RegisterMemberDTO registerMemberDTO = new RegisterMemberDTO("test06","test06@realworld.com","1111");
 
