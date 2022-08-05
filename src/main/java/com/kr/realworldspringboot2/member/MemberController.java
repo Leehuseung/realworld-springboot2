@@ -1,9 +1,10 @@
 package com.kr.realworldspringboot2.member;
 
+import com.kr.realworldspringboot2.security.AuthMemberDTO;
 import com.kr.realworldspringboot2.util.JWTUtil;
 import lombok.RequiredArgsConstructor;
 import net.minidev.json.JSONObject;
-import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -26,8 +27,8 @@ public class MemberController {
     }
 
     @GetMapping("/api/user")
-    public JSONObject getCurrentMember(@RequestAttribute Authentication authentication){
-        MemberDTO memberDTO = memberService.findByEmail(authentication.getName());
+    public JSONObject getCurrentMember(@AuthenticationPrincipal AuthMemberDTO authMemberDTO){
+        MemberDTO memberDTO = memberService.findById(authMemberDTO.getId());
         String token = jwtUtil.generateTokenByEmail(memberDTO.getEmail());
         memberDTO.setToken(token);
         return dtoToJson(memberDTO);
@@ -38,6 +39,8 @@ public class MemberController {
                                    @RequestBody @Valid UpdateMemberDTO updateMemberDTO){
         updateMemberDTO.setId(id);
         MemberDTO memberDTO = memberService.updateMember(updateMemberDTO);
+        String token = jwtUtil.generateTokenByEmail(memberDTO.getEmail());
+        memberDTO.setToken(token);
         return dtoToJson(memberDTO);
     }
 

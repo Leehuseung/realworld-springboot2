@@ -1,15 +1,17 @@
 package com.kr.realworldspringboot2.util;
 
+import com.kr.realworldspringboot2.security.AuthUserDetailsService;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.impl.DefaultClaims;
 import io.jsonwebtoken.impl.DefaultJws;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 import java.time.ZonedDateTime;
@@ -29,7 +31,11 @@ public class JWTUtil {
 
     @Value("${jwt.token-validity-in-seconds}")
     private long TOKEN_EXPIRE_SECONDS;
+
     private final String DEFAULT_RULE = "ROLE_USER";
+
+    @Autowired
+    AuthUserDetailsService authUserDetailsService;
 
     public String generateToken(Authentication authentication) {
         String authorities = authentication.getAuthorities().stream()
@@ -83,9 +89,9 @@ public class JWTUtil {
                             .map(SimpleGrantedAuthority::new)
                             .collect(Collectors.toList());
 
-            User principal = new User(claims.getSubject(), "", authorities);
+            UserDetails authMemberDTO = authUserDetailsService.loadUserByUsername(claims.getSubject());
 
-            return new UsernamePasswordAuthenticationToken(principal, tokenStr, authorities);
+            return new UsernamePasswordAuthenticationToken(authMemberDTO, tokenStr, authorities);
         } catch (Exception e) {
             e.printStackTrace();
             return null;
