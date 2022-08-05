@@ -31,6 +31,7 @@ class AuthUserDetailsServiceTest {
         String password = "1111";
 
         Member test06 = Member.builder()
+                .id(1l)
                 .username(username)
                 .password(password)
                 .email("test06")
