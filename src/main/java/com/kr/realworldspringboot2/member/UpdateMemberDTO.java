@@ -9,6 +9,7 @@ import javax.validation.constraints.Email;
 
 @Getter
 @Setter
+@NoArgsConstructor
 public class UpdateMemberDTO {
     @Valid
     private User user;

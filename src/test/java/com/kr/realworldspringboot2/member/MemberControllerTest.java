@@ -9,15 +9,18 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.transaction.annotation.Transactional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
 @AutoConfigureMockMvc
+@Transactional
 class MemberControllerTest {
 
     @Test
@@ -86,6 +89,29 @@ class MemberControllerTest {
                 .andExpect(jsonPath("$.user.token").isNotEmpty())
                 .andExpect(jsonPath("$.user.bio").isEmpty())
                 .andExpect(jsonPath("$.user.image").isEmpty());
+    }
+    @Test
+    @WithUserDetails("test01@realworld.com")
+    @DisplayName("사용자 업데이트 테스트")
+    public void update_user(@Autowired MockMvc mvc) throws Exception {
+        //given
+        JSONObject body = new JSONObject();
+        JSONObject user = new JSONObject();
+        user.put("username","test_update");
+        user.put("email","test_update@realworld.com");
+        user.put("password","9999");
+        user.put("bio","test_bio");
+        user.put("image","test_image");
+        body.put("user",user);
+
+        //when
+        mvc.perform(put("/api/user").contentType(MediaType.APPLICATION_JSON).content(body.toString()))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.user.username").value("test_update"))
+                .andExpect(jsonPath("$.user.email").value("test_update@realworld.com"))
+                .andExpect(jsonPath("$.user.token").isNotEmpty())
+                .andExpect(jsonPath("$.user.bio").value("test_bio"))
+                .andExpect(jsonPath("$.user.image").value("test_image"));
     }
 
 }

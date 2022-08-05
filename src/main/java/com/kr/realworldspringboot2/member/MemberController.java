@@ -35,9 +35,9 @@ public class MemberController {
     }
 
     @PutMapping("/api/user")
-    public JSONObject updateMember(@RequestAttribute long id,
+    public JSONObject updateMember(@AuthenticationPrincipal AuthMemberDTO authMemberDTO,
                                    @RequestBody @Valid UpdateMemberDTO updateMemberDTO){
-        updateMemberDTO.setId(id);
+        updateMemberDTO.setId(authMemberDTO.getId());
         MemberDTO memberDTO = memberService.updateMember(updateMemberDTO);
         String token = jwtUtil.generateTokenByEmail(memberDTO.getEmail());
         memberDTO.setToken(token);
