@@ -7,9 +7,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -70,6 +72,20 @@ class MemberControllerTest {
         //when
         mvc.perform(post("/api/users").contentType(MediaType.APPLICATION_JSON).content(body.toString()))
                 .andExpect(status().isUnprocessableEntity());
+    }
+
+    @Test
+    @WithUserDetails("test01@realworld.com")
+    @DisplayName("로그인 사용자 정보 get 테스트")
+    public void get_current_user(@Autowired MockMvc mvc) throws Exception {
+        //when
+        mvc.perform(get("/api/user"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.user.username").value("test01"))
+                .andExpect(jsonPath("$.user.email").value("test01@realworld.com"))
+                .andExpect(jsonPath("$.user.token").isNotEmpty())
+                .andExpect(jsonPath("$.user.bio").isEmpty())
+                .andExpect(jsonPath("$.user.image").isEmpty());
     }
 
 }
