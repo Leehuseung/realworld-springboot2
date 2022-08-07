@@ -44,7 +44,7 @@ class MemberServiceImpl implements MemberService {
     @Override
     public MemberDTO updateMember(UpdateMemberDTO updateMemberDTO) {
         if(updateMemberDTO.getPassword() != null){
-            updateMemberDTO.getUser().setPassword(passwordEncoder.encode(updateMemberDTO.getPassword()));
+            updateMemberDTO.setPassword(passwordEncoder.encode(updateMemberDTO.getPassword()));
         }
         Member member = memberRepository.findById(updateMemberDTO.getId()).get();
         updateMemberDTO.applyTo(member);
