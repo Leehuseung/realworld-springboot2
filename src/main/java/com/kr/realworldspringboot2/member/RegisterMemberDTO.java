@@ -1,5 +1,8 @@
 package com.kr.realworldspringboot2.member;
 
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import com.fasterxml.jackson.annotation.JsonTypeName;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -11,34 +14,10 @@ import javax.validation.constraints.NotEmpty;
 @Getter
 @Setter
 @NoArgsConstructor
+@AllArgsConstructor
+@JsonTypeName("user")
+@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.WRAPPER_OBJECT)
 class RegisterMemberDTO {
-    @Valid
-    private User user;
-
-    public String getEmail() {
-        return user.getEmail();
-    }
-
-    public String getUsername() {
-        return user.getUsername();
-    }
-
-    public String getPassword() {
-        return user.getPassword();
-    }
-
-    public RegisterMemberDTO(String username, String email, String password) {
-        User userDTO = new User();
-        userDTO.setUsername(username);
-        userDTO.setEmail(email);
-        userDTO.setPassword(password);
-        this.user = userDTO;
-    }
-
-    @Getter
-    @Setter
-    @NoArgsConstructor
-    class User {
         @NotEmpty(message = "username can't be empty")
         private String username;
         @NotEmpty(message = "email can't be empty")
@@ -46,7 +25,4 @@ class RegisterMemberDTO {
         private String email;
         @NotEmpty(message = "password can't be empty")
         private String password;
-    }
-
-
 }

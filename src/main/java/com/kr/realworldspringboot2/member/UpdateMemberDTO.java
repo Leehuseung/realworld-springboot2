@@ -1,67 +1,34 @@
 package com.kr.realworldspringboot2.member;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import com.fasterxml.jackson.annotation.JsonTypeName;
+import lombok.*;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Email;
 
 @Getter
 @Setter
+@Builder
 @NoArgsConstructor
+@AllArgsConstructor
+@JsonTypeName("user")
+@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.WRAPPER_OBJECT)
 public class UpdateMemberDTO {
-    @Valid
-    private User user;
-
     private long id;
-
-    public String getEmail() {
-        return user.getEmail();
-    }
-
-    public String getUsername() {
-        return user.getUsername();
-    }
-
-    public String getPassword() {
-        return user.getPassword();
-    }
-
-    public String getBio() {
-        return user.getBio();
-    }
-
-    public String getImage() {
-        return user.getImage();
-    }
-
-    public UpdateMemberDTO(String username, String email, String bio, String image) {
-        UpdateMemberDTO.User userDTO = new UpdateMemberDTO.User();
-        userDTO.setUsername(username);
-        userDTO.setEmail(email);
-        userDTO.setBio(bio);
-        userDTO.setImage(image);
-        this.user = userDTO;
-    }
+    private String username;
+    @Email(message = "confirm your email format")
+    private String email;
+    private String password;
+    private String bio;
+    private String image;
 
     void applyTo(Member m) {
-        if(this.user.getUsername() != null) m.setUsername(this.user.getUsername());
-        if(this.user.getEmail() != null) m.setEmail(this.user.getEmail());
-        if(this.user.getPassword() != null) m.setPassword(this.user.getPassword());
-        if(this.user.getBio() != null) m.setBio(this.user.getBio());
-        if(this.user.getImage() != null) m.setImage(this.user.getImage());
+        if(this.getUsername() != null) m.setUsername(this.getUsername());
+        if(this.getEmail() != null) m.setEmail(this.getEmail());
+        if(this.getPassword() != null) m.setPassword(this.getPassword());
+        if(this.getBio() != null) m.setBio(this.getBio());
+        if(this.getImage() != null) m.setImage(this.getImage());
     }
 
-    @Getter
-    @Setter
-    @NoArgsConstructor
-    class User {
-        private String username;
-        @Email(message = "confirm your email format")
-        private String email;
-        private String password;
-        private String bio;
-        private String image;
-    }
 }

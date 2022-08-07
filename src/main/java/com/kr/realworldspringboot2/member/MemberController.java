@@ -16,40 +16,34 @@ public class MemberController {
     private final MemberService memberService;
 
     @PostMapping("/api/users")
-    public JSONObject registrationMember(@RequestBody @Valid RegisterMemberDTO registerMemberDTO){
+    public MemberDTO registrationMember(@RequestBody @Valid RegisterMemberDTO registerMemberDTO){
         Long id = memberService.registerMember(registerMemberDTO);
         MemberDTO memberDTO = memberService.findById(id);
 
         String token = jwtUtil.generateTokenByEmail(memberDTO.getEmail());
         memberDTO.setToken(token);
 
-        return dtoToJson(memberDTO);
+        return memberDTO;
     }
 
     @GetMapping("/api/user")
-    public JSONObject getCurrentMember(@AuthenticationPrincipal AuthMemberDTO authMemberDTO){
+    public MemberDTO getCurrentMember(@AuthenticationPrincipal AuthMemberDTO authMemberDTO){
         MemberDTO memberDTO = memberService.findById(authMemberDTO.getId());
         String token = jwtUtil.generateTokenByEmail(memberDTO.getEmail());
         memberDTO.setToken(token);
-        return dtoToJson(memberDTO);
+        return memberDTO;
     }
 
     @PutMapping("/api/user")
-    public JSONObject updateMember(@AuthenticationPrincipal AuthMemberDTO authMemberDTO,
+    public MemberDTO updateMember(@AuthenticationPrincipal AuthMemberDTO authMemberDTO,
                                    @RequestBody @Valid UpdateMemberDTO updateMemberDTO){
         updateMemberDTO.setId(authMemberDTO.getId());
         MemberDTO memberDTO = memberService.updateMember(updateMemberDTO);
         String token = jwtUtil.generateTokenByEmail(memberDTO.getEmail());
         memberDTO.setToken(token);
-        return dtoToJson(memberDTO);
+        return memberDTO;
     }
 
-
-    public JSONObject dtoToJson(MemberDTO memberDTO){
-        JSONObject jsonObject = new JSONObject();
-        jsonObject.put("user",memberDTO);
-        return jsonObject;
-    }
 
 
 }
