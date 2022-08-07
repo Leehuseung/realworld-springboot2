@@ -77,9 +77,12 @@ public class MemberServiceTest {
     @DisplayName("사용자 업데이트 테스트")
     public void member_update(){
 
-        UpdateMemberDTO updateMemberDTO = new UpdateMemberDTO(
-                "test06","test06@realworld.com","bio","image"
-        );
+        UpdateMemberDTO updateMemberDTO = UpdateMemberDTO.builder()
+                .username("test06")
+                .email("test06@realworld.com")
+                .bio("bio")
+                .image("image")
+                .build();
 
         //given
         Member member = Member.builder()
