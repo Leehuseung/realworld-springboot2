@@ -11,6 +11,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -49,6 +51,30 @@ class ProfileControllerTest {
         mvc.perform(get("/api/profiles/test05"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.profile.username").value("test05"))
+                .andExpect(jsonPath("$.profile.bio").isEmpty())
+                .andExpect(jsonPath("$.profile.image").isEmpty())
+                .andExpect(jsonPath("$.profile.following").value(false));
+    }
+    
+    @Test
+    @WithUserDetails("test01@realworld.com")
+    @DisplayName("follow 테스트")
+    public void follow_user(@Autowired MockMvc mvc) throws Exception {
+        mvc.perform(post("/api/profiles/test05/follow"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.profile.username").value("test05"))
+                .andExpect(jsonPath("$.profile.bio").isEmpty())
+                .andExpect(jsonPath("$.profile.image").isEmpty())
+                .andExpect(jsonPath("$.profile.following").value(true));
+    }
+
+    @Test
+    @WithUserDetails("test01@realworld.com")
+    @DisplayName("unFollow 테스트")
+    public void unFollow_user(@Autowired MockMvc mvc) throws Exception {
+        mvc.perform(delete("/api/profiles/test02/follow"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.profile.username").value("test02"))
                 .andExpect(jsonPath("$.profile.bio").isEmpty())
                 .andExpect(jsonPath("$.profile.image").isEmpty())
                 .andExpect(jsonPath("$.profile.following").value(false));

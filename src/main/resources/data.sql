@@ -9,3 +9,4 @@ INSERT INTO FOLLOW (follow_member_id,member_id) VALUES (2,1); -- 01이 02 follow
 INSERT INTO FOLLOW (follow_member_id,member_id) VALUES (2,3); -- 03이 02 follow
 INSERT INTO FOLLOW (follow_member_id,member_id) VALUES (2,4); -- 04이 02 follow
 INSERT INTO FOLLOW (follow_member_id,member_id) VALUES (2,5); -- 05이 02 follow
+INSERT INTO FOLLOW (follow_member_id,member_id) VALUES (2,6); -- 06이 02 follow
