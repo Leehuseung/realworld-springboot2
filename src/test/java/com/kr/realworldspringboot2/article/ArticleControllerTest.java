@@ -13,6 +13,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -92,6 +93,77 @@ class ArticleControllerTest {
                 .andExpect(jsonPath("$.article.author.following").value(false))
                 .andExpect(jsonPath("$.article.author.bio").hasJsonPath())
                 .andExpect(jsonPath("$.article.author.image").hasJsonPath());
+    }
+
+
+    @Test
+    @DisplayName("로그인없이 사용자 글 조회 테스트")
+    public void get_article(@Autowired MockMvc mvc) throws Exception {
+        mvc.perform(get("/api/articles/how-to-train-your-dragon"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.article.slug").value("how-to-train-your-dragon"))
+                .andExpect(jsonPath("$.article.title").value("How to train your dragon"))
+                .andExpect(jsonPath("$.article.description").value("Ever wonder how?"))
+                .andExpect(jsonPath("$.article.body").value("You have to believe"))
+                .andExpect(jsonPath("$.article.tagList[0]").value("reactjs"))
+                .andExpect(jsonPath("$.article.tagList[1]").value("angularjs"))
+                .andExpect(jsonPath("$.article.tagList[2]").value("dragons"))
+                .andExpect(jsonPath("$.article.createdAt").isNotEmpty())
+                .andExpect(jsonPath("$.article.updatedAt").isNotEmpty())
+                .andExpect(jsonPath("$.article.favorited").value(false))
+                .andExpect(jsonPath("$.article.author.username").value("test01"))
+                .andExpect(jsonPath("$.article.author.following").value(false))
+                .andExpect(jsonPath("$.article.author.bio").hasJsonPath())
+                .andExpect(jsonPath("$.article.author.image").hasJsonPath());
+    }
+
+
+    @Test
+    @DisplayName("글 좋아요 count test")
+    public void get_article_favorite_count(@Autowired MockMvc mvc) throws Exception {
+        mvc.perform(get("/api/articles/how-to-train-your-dragon"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.article.favoritesCount").value(2));
+    }
+
+    @Test
+    @WithUserDetails("test02@realworld.com")
+    @DisplayName("로그인 사용자가 좋아요한 글 조회 테스트")
+    public void get_article_favorite_true(@Autowired MockMvc mvc) throws Exception {
+        //test02가 how-to-train-your-dragon를 좋아요
+        mvc.perform(get("/api/articles/how-to-train-your-dragon"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.article.favorited").value(true));
+    }
+
+    @Test
+    @WithUserDetails("test06@realworld.com")
+    @DisplayName("로그인 사용자가 좋아요안한 글 조회 테스트")
+    public void get_article_favorite_false(@Autowired MockMvc mvc) throws Exception {
+        //test06이 how-to-train-your-dragon를 좋아요 안함
+        mvc.perform(get("/api/articles/how-to-train-your-dragon"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.article.favorited").value(false));
+    }
+
+    @Test
+    @WithUserDetails("test05@realworld.com")
+    @DisplayName("로그인 사용자가 Follow 한 author 테스트")
+    public void get_article_following_true(@Autowired MockMvc mvc) throws Exception {
+        //test05는 test01(글작성자)를 follow
+        mvc.perform(get("/api/articles/how-to-train-your-dragon"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.article.author.following").value(true));
+    }
+
+    @Test
+    @WithUserDetails("test04@realworld.com")
+    @DisplayName("로그인 사용자가 Follow 안한 author 테스트")
+    public void get_article_following_false(@Autowired MockMvc mvc) throws Exception {
+        //test04는 test01(글작성자)를 follow안함
+        mvc.perform(get("/api/articles/how-to-train-your-dragon"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.article.author.following").value(false));
     }
 
 }

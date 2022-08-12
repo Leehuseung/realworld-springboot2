@@ -49,13 +49,17 @@ public class Member extends BaseEntity{
     @Builder.Default
     private Set<Follow> follows = new HashSet<>();
 
+    @OneToMany(mappedBy = "followMember")
+    @Builder.Default
+    private Set<Follow> followee = new HashSet<>();
+
     public boolean isFollowee(Member loginMember) {
         Follow follow = Follow.builder()
                 .member(loginMember)
                 .followMember(this)
                 .build();
 
-        return follows.contains(follow);
+        return followee.contains(follow);
     }
 
     public boolean isFavoriteArticle(Article article) {

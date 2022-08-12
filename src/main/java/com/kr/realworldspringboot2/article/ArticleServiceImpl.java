@@ -37,11 +37,21 @@ public class ArticleServiceImpl implements ArticleService {
             insertTag(article, tagList);
         }
 
-        Article newArticle = articleRepository.findById(article.getId()).get();
+        return article.toArticleDTO(loginMember);
+    }
 
-        ArticleDTO articleDTO = newArticle.toArticleDTO(loginMember);
-
-        return articleDTO;
+    @Override
+    public ArticleDTO getArticleBySlug(String slug, AuthMemberDTO authMemberDTO) {
+        Member loginMember = authMemberDTO == null ? null : memberRepository.findById(authMemberDTO.getId()).orElse(null);
+        System.out.println("loginMember"+ loginMember);
+        System.out.println("loginMember"+ loginMember);
+        System.out.println("loginMember"+ loginMember);
+        System.out.println("loginMember"+ loginMember);
+        System.out.println("loginMember"+ loginMember);
+        System.out.println("loginMember"+ loginMember);
+        System.out.println("loginMember"+ loginMember);
+        Article article = articleRepository.findBySlug(slug);
+        return article.toArticleDTO(loginMember);
     }
 
     private void insertTag(Article article, List<String> tagList) {

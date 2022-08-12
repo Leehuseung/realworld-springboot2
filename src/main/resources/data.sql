@@ -11,6 +11,9 @@ INSERT INTO FOLLOW (follow_member_id,member_id) VALUES (2,4); -- 04이 02 follow
 INSERT INTO FOLLOW (follow_member_id,member_id) VALUES (2,5); -- 05이 02 follow
 INSERT INTO FOLLOW (follow_member_id,member_id) VALUES (2,6); -- 06이 02 follow
 
+INSERT INTO FOLLOW (follow_member_id,member_id) VALUES (1,5); -- 05가 01 follow
+
+
 INSERT INTO ARTICLE (create_date,update_date,body,description,slug,title,member_id)
 VALUES ('2022-08-11 11:28:27.035704','2022-08-11 11:28:27.035704','You have to believe','Ever wonder how?','how-to-train-your-dragon','How to train your dragon',1);
 
