@@ -1,13 +1,19 @@
 package com.kr.realworldspringboot2.member;
 
 
+import com.kr.realworldspringboot2.article.Article;
+import com.kr.realworldspringboot2.article.favorite.ArticleFavorite;
+import com.kr.realworldspringboot2.profile.Follow;
+import com.kr.realworldspringboot2.profile.ProfileDTO;
 import com.sun.istack.NotNull;
 import lombok.*;
 import org.springframework.lang.Nullable;
 
 import javax.persistence.*;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Builder
@@ -39,9 +45,48 @@ public class Member extends BaseEntity{
     @Enumerated(EnumType.STRING)
     private List<MemberRole> roles = new ArrayList<>();
 
-    public void addMemberRole(MemberRole memberRole) {
-        roles.add(memberRole);
+    @OneToMany(mappedBy = "member")
+    @Builder.Default
+    private Set<Follow> follows = new HashSet<>();
+
+    public boolean isFollowee(Member loginMember) {
+        Follow follow = Follow.builder()
+                .member(loginMember)
+                .followMember(this)
+                .build();
+
+        return follows.contains(follow);
+    }
+
+    public boolean isFavoriteArticle(Article article) {
+        ArticleFavorite articleFavorite = ArticleFavorite.builder()
+                .article(article)
+                .member(this)
+                .build();
+
+        return article.getArticleFavorites().contains(articleFavorite);
+    }
+
+    public ProfileDTO toProfileDTO(Member loginMember){
+        return ProfileDTO.builder()
+                .username(this.username)
+                .bio(this.bio)
+                .image(this.image)
+                .following(isFollowee(loginMember))
+                .build();
+    }
+
+    public AuthorDTO toAuthorDTO(Member loginMember){
+        return AuthorDTO.builder()
+                .username(this.username)
+                .bio(this.bio)
+                .image(this.image)
+                .following(isFollowee(loginMember))
+                .build();
     }
 
 
+    public void addMemberRole(MemberRole memberRole) {
+        roles.add(memberRole);
+    }
 }

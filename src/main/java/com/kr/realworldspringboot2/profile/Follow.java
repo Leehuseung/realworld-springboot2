@@ -4,6 +4,7 @@ import com.kr.realworldspringboot2.member.Member;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.Objects;
 
 @Entity
 @Builder
@@ -26,6 +27,16 @@ public class Follow {
     @JoinColumn(name = "FOLLOW_MEMBER_ID")
     private Member followMember;
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Follow follow = (Follow) o;
+        return Objects.equals(member, follow.member) && Objects.equals(followMember, follow.followMember);
+    }
 
-
+    @Override
+    public int hashCode() {
+        return Objects.hash(member, followMember);
+    }
 }
