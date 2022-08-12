@@ -1,5 +1,6 @@
 package com.kr.realworldspringboot2.util;
 
+import com.kr.realworldspringboot2.security.AuthMemberDTO;
 import com.kr.realworldspringboot2.security.AuthUserDetailsService;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -41,9 +42,10 @@ public class JWTUtil {
         String authorities = authentication.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.joining(","));
+        AuthMemberDTO memberDTO = (AuthMemberDTO)authentication.getPrincipal();
         try{
             return Jwts.builder()
-                    .setSubject(authentication.getName())
+                    .setSubject(memberDTO.getEmail())
                     .setIssuedAt(new Date())
                     .setExpiration(Date.from(ZonedDateTime.now()
                             .plusMinutes(TOKEN_EXPIRE_SECONDS).toInstant()))
