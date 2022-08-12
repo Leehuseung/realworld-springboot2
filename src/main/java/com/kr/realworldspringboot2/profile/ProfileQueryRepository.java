@@ -41,6 +41,6 @@ public class ProfileQueryRepository {
     }
 
     private Predicate loginEq(AuthMemberDTO authMemberDTO) {
-        return authMemberDTO == null ? null : follow.member.id.eq(authMemberDTO.getId());
+        return authMemberDTO == null ? follow.member.id.eq(-1l) : follow.member.id.eq(authMemberDTO.getId());
     }
 }
