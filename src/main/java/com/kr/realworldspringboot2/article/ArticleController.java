@@ -30,4 +30,13 @@ public class ArticleController {
                               @AuthenticationPrincipal AuthMemberDTO authMemberDTO) {
         articleService.deleteArticle(slug,authMemberDTO);
     }
+
+    @PutMapping("/api/articles/{slug}")
+    public ArticleDTO updateArticle(@PathVariable String slug,
+                                    @RequestBody UpdateArticleDTO updateArticleDTO,
+                                    @AuthenticationPrincipal AuthMemberDTO authMemberDTO) {
+        return articleService.updateArticle(slug,updateArticleDTO,authMemberDTO);
+    }
+
+
 }

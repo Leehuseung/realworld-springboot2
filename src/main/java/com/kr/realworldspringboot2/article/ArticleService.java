@@ -9,6 +9,8 @@ public interface ArticleService {
 
     ArticleDTO getArticleBySlug(String slug, AuthMemberDTO authMemberDTO);
 
+    ArticleDTO updateArticle(String slug, UpdateArticleDTO updateArticleDTO, AuthMemberDTO authMemberDTO);
+
     void deleteArticle(String slug, AuthMemberDTO authMemberDTO);
 
     default Article registerArticleToEntity(RegisterArticleDTO registerArticleDTO) {

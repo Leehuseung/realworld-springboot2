@@ -11,6 +11,7 @@ import com.kr.realworldspringboot2.security.AuthMemberDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -47,6 +48,26 @@ public class ArticleServiceImpl implements ArticleService {
     public ArticleDTO getArticleBySlug(String slug, AuthMemberDTO authMemberDTO) {
         Member loginMember = authMemberDTO == null ? null : memberRepository.findById(authMemberDTO.getId()).orElse(null);
         Article article = articleRepository.findBySlug(slug);
+        return article.toArticleDTO(loginMember);
+    }
+
+    @Override
+    public ArticleDTO updateArticle(String slug, UpdateArticleDTO updateArticleDTO, AuthMemberDTO authMemberDTO) {
+        Article article = articleRepository.findBySlug(slug);
+        Member loginMember = memberRepository.findById(authMemberDTO.getId()).get();
+        if(!article.getMember().getId().equals(authMemberDTO.getId())){
+            throw new NotUserOwnException("article");
+        }
+
+        List<String> tagList = updateArticleDTO.getTagList();
+        articleTagRepository.deleteArticleTagsByArticle(article);
+        article.setArticleTags(new ArrayList<>());
+        if(tagList != null){
+            insertTag(article, tagList);
+        }
+
+        updateArticleDTO.applyTo(article);
+        articleRepository.save(article);
         return article.toArticleDTO(loginMember);
     }
 
