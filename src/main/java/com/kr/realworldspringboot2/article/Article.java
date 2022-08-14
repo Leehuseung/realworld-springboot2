@@ -38,11 +38,11 @@ public class Article extends BaseEntity {
     @JoinColumn(name = "MEMBER_ID")
     private Member member;
 
-    @OneToMany(mappedBy = "article")
+    @OneToMany(mappedBy = "article", cascade = {CascadeType.REMOVE})
     @Builder.Default
     private List<ArticleTag> articleTags = new ArrayList<>();
 
-    @OneToMany(mappedBy = "article")
+    @OneToMany(mappedBy = "article", cascade = {CascadeType.REMOVE})
     @Builder.Default
     private Set<ArticleFavorite> articleFavorites = new HashSet<>();
 

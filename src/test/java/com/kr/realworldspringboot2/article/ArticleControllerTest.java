@@ -15,6 +15,8 @@ import org.springframework.transaction.annotation.Transactional;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -165,5 +167,16 @@ class ArticleControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.article.author.following").value(false));
     }
+
+
+    @Test
+    @WithUserDetails("test01@realworld.com")
+    @DisplayName("글 삭제 테스트")
+    public void delete_article(@Autowired MockMvc mvc) throws Exception {
+        mvc.perform(delete("/api/articles/how-to-train-your-dragon"))
+                .andExpect(status().isOk());
+    }
+
+
 
 }

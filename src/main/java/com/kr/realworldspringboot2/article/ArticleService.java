@@ -9,6 +9,8 @@ public interface ArticleService {
 
     ArticleDTO getArticleBySlug(String slug, AuthMemberDTO authMemberDTO);
 
+    void deleteArticle(String slug, AuthMemberDTO authMemberDTO);
+
     default Article registerArticleToEntity(RegisterArticleDTO registerArticleDTO) {
         Article article = Article.builder()
                 .title(registerArticleDTO.getTitle())
@@ -20,6 +22,4 @@ public interface ArticleService {
 
         return article;
     }
-
-
 }

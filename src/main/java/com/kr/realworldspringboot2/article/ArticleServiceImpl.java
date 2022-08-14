@@ -1,8 +1,10 @@
 package com.kr.realworldspringboot2.article;
 
+import com.kr.realworldspringboot2.article.favorite.ArticleFavoriteRepository;
 import com.kr.realworldspringboot2.article.tag.Tag;
 import com.kr.realworldspringboot2.article.tag.TagRepository;
 import com.kr.realworldspringboot2.exception.DuplicateRegisterException;
+import com.kr.realworldspringboot2.exception.NotUserOwnException;
 import com.kr.realworldspringboot2.member.Member;
 import com.kr.realworldspringboot2.member.MemberRepository;
 import com.kr.realworldspringboot2.security.AuthMemberDTO;
@@ -18,6 +20,7 @@ public class ArticleServiceImpl implements ArticleService {
     private final ArticleRepository articleRepository;
     private final TagRepository tagRepository;
     private final ArticleTagRepository articleTagRepository;
+    private final ArticleFavoriteRepository articleFavoriteRepository;
     private final MemberRepository memberRepository;
 
     @Override
@@ -43,15 +46,20 @@ public class ArticleServiceImpl implements ArticleService {
     @Override
     public ArticleDTO getArticleBySlug(String slug, AuthMemberDTO authMemberDTO) {
         Member loginMember = authMemberDTO == null ? null : memberRepository.findById(authMemberDTO.getId()).orElse(null);
-        System.out.println("loginMember"+ loginMember);
-        System.out.println("loginMember"+ loginMember);
-        System.out.println("loginMember"+ loginMember);
-        System.out.println("loginMember"+ loginMember);
-        System.out.println("loginMember"+ loginMember);
-        System.out.println("loginMember"+ loginMember);
-        System.out.println("loginMember"+ loginMember);
         Article article = articleRepository.findBySlug(slug);
         return article.toArticleDTO(loginMember);
+    }
+
+    @Override
+    public void deleteArticle(String slug, AuthMemberDTO authMemberDTO) {
+        Article article = articleRepository.findBySlug(slug);
+        if(!article.getMember().getId().equals(authMemberDTO.getId())){
+           throw new NotUserOwnException("article");
+        }
+        articleFavoriteRepository.deleteArticleFavoritesByArticle(article);
+        articleTagRepository.deleteArticleTagsByArticle(article);
+        articleRepository.delete(article);
+
     }
 
     private void insertTag(Article article, List<String> tagList) {

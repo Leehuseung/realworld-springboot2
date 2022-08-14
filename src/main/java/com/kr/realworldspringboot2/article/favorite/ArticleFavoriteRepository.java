@@ -4,4 +4,7 @@ import com.kr.realworldspringboot2.article.Article;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface ArticleFavoriteRepository extends JpaRepository<ArticleFavorite,Long> {
+
+    void deleteArticleFavoritesByArticle(Article article);
+
 }

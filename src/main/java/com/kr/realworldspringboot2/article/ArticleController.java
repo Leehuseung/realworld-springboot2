@@ -25,4 +25,9 @@ public class ArticleController {
         return articleService.getArticleBySlug(slug, authMemberDTO);
     }
 
+    @DeleteMapping("/api/articles/{slug}")
+    public void deleteArticle(@PathVariable String slug,
+                              @AuthenticationPrincipal AuthMemberDTO authMemberDTO) {
+        articleService.deleteArticle(slug,authMemberDTO);
+    }
 }
