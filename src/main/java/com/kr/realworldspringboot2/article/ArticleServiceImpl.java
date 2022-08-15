@@ -102,6 +102,20 @@ public class ArticleServiceImpl implements ArticleService {
         return article.toArticleDTO(loginMember);
     }
 
+    @Override
+    public ArticleDTO deleteArticleFavorite(String slug, AuthMemberDTO authMemberDTO) {
+        Member loginMember = memberRepository.findById(authMemberDTO.getId()).get();
+        Article article = articleRepository.findBySlug(slug);
+        ArticleFavorite articleFavorite = ArticleFavorite.builder()
+                .article(article)
+                .member(loginMember)
+                .build();
+
+        article.getArticleFavorites().remove(articleFavorite);
+        articleFavoriteRepository.deleteArticleFavoriteByArticleAndMember(article,loginMember);
+        return article.toArticleDTO(loginMember);
+    }
+
     private void insertTag(Article article, List<String> tagList) {
         for (String tagName : tagList) {
             Tag tag;

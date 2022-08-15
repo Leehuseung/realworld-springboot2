@@ -10,4 +10,6 @@ public interface ArticleFavoriteRepository extends JpaRepository<ArticleFavorite
 
     void deleteArticleFavoritesByArticle(Article article);
 
+    void deleteArticleFavoriteByArticleAndMember(Article article, Member member);
+
 }

@@ -269,5 +269,24 @@ class ArticleControllerTest {
                 .andExpect(jsonPath("$.article.favoritesCount").value(2));
     }
 
+    @Test
+    @WithUserDetails("test02@realworld.com")
+    @DisplayName("글 좋아요 취소 테스트")
+    public void unFavorite_article(@Autowired MockMvc mvc) throws Exception {
+        mvc.perform(delete("/api/articles/how-to-train-your-dragon/favorite"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.article.favorited").value(false))
+                .andExpect(jsonPath("$.article.favoritesCount").value(1));
+    }
+
+    @Test
+    @WithUserDetails("test03@realworld.com")
+    @DisplayName("글 좋아요 없는글 취소")
+    public void unFavorite_article_none(@Autowired MockMvc mvc) throws Exception {
+        mvc.perform(delete("/api/articles/how-to-train-your-dragon/favorite"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.article.favorited").value(false))
+                .andExpect(jsonPath("$.article.favoritesCount").value(2));
+    }
 
 }

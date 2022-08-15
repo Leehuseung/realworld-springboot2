@@ -15,6 +15,8 @@ public interface ArticleService {
 
     ArticleDTO saveArticleFavorite(String slug, AuthMemberDTO authMemberDTO);
 
+    ArticleDTO deleteArticleFavorite(String slug, AuthMemberDTO authMemberDTO);
+
     default Article registerArticleToEntity(RegisterArticleDTO registerArticleDTO) {
         Article article = Article.builder()
                 .title(registerArticleDTO.getTitle())

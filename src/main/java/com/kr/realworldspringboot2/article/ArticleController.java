@@ -44,5 +44,10 @@ public class ArticleController {
         return articleService.saveArticleFavorite(slug, authMemberDTO);
     }
 
+    @DeleteMapping("/api/articles/{slug}/favorite")
+    public ArticleDTO unFavoriteArticle(@PathVariable String slug,
+                                        @AuthenticationPrincipal AuthMemberDTO authMemberDTO) {
+        return articleService.deleteArticleFavorite(slug, authMemberDTO);
+    }
 
 }
