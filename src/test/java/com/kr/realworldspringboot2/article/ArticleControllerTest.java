@@ -249,4 +249,25 @@ class ArticleControllerTest {
                 .andExpect(jsonPath("$.article.tagList").isEmpty());
     }
 
+    @Test
+    @WithUserDetails("test03@realworld.com")
+    @DisplayName("글 좋아요 테스트")
+    public void favorite_article(@Autowired MockMvc mvc) throws Exception {
+        mvc.perform(post("/api/articles/how-to-train-your-dragon/favorite"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.article.favorited").value(true))
+                .andExpect(jsonPath("$.article.favoritesCount").value(3));
+    }
+
+    @Test
+    @WithUserDetails("test02@realworld.com")
+    @DisplayName("글 좋아요 이미 했을 때 테스트")
+    public void favorite_article_duplicate(@Autowired MockMvc mvc) throws Exception {
+        mvc.perform(post("/api/articles/how-to-train-your-dragon/favorite"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.article.favorited").value(true))
+                .andExpect(jsonPath("$.article.favoritesCount").value(2));
+    }
+
+
 }

@@ -38,5 +38,11 @@ public class ArticleController {
         return articleService.updateArticle(slug,updateArticleDTO,authMemberDTO);
     }
 
+    @PostMapping("/api/articles/{slug}/favorite")
+    public ArticleDTO favoriteArticle(@PathVariable String slug,
+                                      @AuthenticationPrincipal AuthMemberDTO authMemberDTO) {
+        return articleService.saveArticleFavorite(slug, authMemberDTO);
+    }
+
 
 }

@@ -1,5 +1,6 @@
 package com.kr.realworldspringboot2.article;
 
+import com.kr.realworldspringboot2.article.favorite.ArticleFavorite;
 import com.kr.realworldspringboot2.article.favorite.ArticleFavoriteRepository;
 import com.kr.realworldspringboot2.article.tag.Tag;
 import com.kr.realworldspringboot2.article.tag.TagRepository;
@@ -81,6 +82,24 @@ public class ArticleServiceImpl implements ArticleService {
         articleTagRepository.deleteArticleTagsByArticle(article);
         articleRepository.delete(article);
 
+    }
+
+    @Override
+    public ArticleDTO saveArticleFavorite(String slug, AuthMemberDTO authMemberDTO) {
+        Member loginMember = memberRepository.findById(authMemberDTO.getId()).get();
+        Article article = articleRepository.findBySlug(slug);
+
+        ArticleFavorite articleFavorite = ArticleFavorite.builder()
+                .article(article)
+                .member(loginMember)
+                .build();
+
+        if(articleFavoriteRepository.countByArticleAndMember(article,loginMember) == 0){
+            articleFavoriteRepository.save(articleFavorite);
+            article.getArticleFavorites().add(articleFavorite);
+        }
+
+        return article.toArticleDTO(loginMember);
     }
 
     private void insertTag(Article article, List<String> tagList) {
