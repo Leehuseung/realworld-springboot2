@@ -66,6 +66,7 @@ public class SecurityConfig {
             .antMatchers("/api/profiles/*").permitAll()
             .antMatchers("/api/articles/*").permitAll()
             .antMatchers("/api/users").permitAll()
+            .antMatchers("/api/tags").permitAll()
             .antMatchers("/user").hasRole("USER")
             .antMatchers("/manager").hasRole("MANAGER")
             .antMatchers("/admin").hasRole("ADMIN")
