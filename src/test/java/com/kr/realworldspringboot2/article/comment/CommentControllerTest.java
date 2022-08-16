@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -86,5 +87,15 @@ class CommentControllerTest {
                 .andExpect(jsonPath("$.comment.author.bio").hasJsonPath())
                 .andExpect(jsonPath("$.comment.author.image").hasJsonPath());
     }
+
+    @Test
+    @WithUserDetails("test01@realworld.com")
+    @DisplayName("댓글 삭제 테스트")
+    public void delete_comment(@Autowired MockMvc mvc) throws Exception {
+        mvc.perform(delete("/api/articles/how-to-train-your-dragon/comments/1"))
+                .andExpect(status().isOk());
+    }
+
+
 
 }

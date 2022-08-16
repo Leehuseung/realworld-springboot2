@@ -12,6 +12,8 @@ public interface CommentService {
 
     CommentDTO addComment(String slug, RegisterCommentDTO registerCommentDTO, AuthMemberDTO authMemberDTO);
 
+    void deleteComment(Long id, AuthMemberDTO authMemberDTO);
+
     default Comment registerCommentToEntity(RegisterCommentDTO registerCommentDTO, Article article, Member member) {
         Comment comment = Comment.builder()
                 .body(registerCommentDTO.getBody())

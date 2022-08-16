@@ -42,4 +42,10 @@ public class CommentServiceImpl implements CommentService {
         return comment.toCommentDTO(loginMember);
     }
 
+    @Override
+    public void deleteComment(Long id, AuthMemberDTO authMemberDTO) {
+        Member loginMember = memberRepository.findById(authMemberDTO.getId()).get();
+        commentRepository.deleteByIdAndMemberEquals(id,loginMember);
+    }
+
 }

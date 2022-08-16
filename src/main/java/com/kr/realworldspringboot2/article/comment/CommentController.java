@@ -29,5 +29,12 @@ public class CommentController {
         return commentService.addComment(slug,registerCommentDTO,authMemberDTO);
     }
 
+    @DeleteMapping("/api/articles/{slug}/comments/{id}")
+    public void deleteComment(@PathVariable String slug,
+                              @PathVariable Long id,
+                              @AuthenticationPrincipal AuthMemberDTO authMemberDTO){
+        commentService.deleteComment(id,authMemberDTO);
+    }
+
 
 }
