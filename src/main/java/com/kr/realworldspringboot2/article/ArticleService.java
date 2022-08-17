@@ -1,6 +1,7 @@
 package com.kr.realworldspringboot2.article;
 
 import com.kr.realworldspringboot2.security.AuthMemberDTO;
+import net.minidev.json.JSONObject;
 
 import java.util.ArrayList;
 
@@ -16,6 +17,8 @@ public interface ArticleService {
     ArticleDTO saveArticleFavorite(String slug, AuthMemberDTO authMemberDTO);
 
     ArticleDTO deleteArticleFavorite(String slug, AuthMemberDTO authMemberDTO);
+
+    JSONObject getArticles(ArticleSearch articleSearch, AuthMemberDTO authMemberDTO);
 
     default Article registerArticleToEntity(RegisterArticleDTO registerArticleDTO) {
         Article article = Article.builder()

@@ -17,9 +17,9 @@ INSERT INTO FOLLOW (follow_member_id,member_id) VALUES (1,5); -- 05가 01 follow
 INSERT INTO ARTICLE (create_date,update_date,body,description,slug,title,member_id)
 VALUES ('2022-08-11 11:28:27.035704','2022-08-11 11:28:27.035704','You have to believe','Ever wonder how?','how-to-train-your-dragon','How to train your dragon',1);
 INSERT INTO ARTICLE (create_date,update_date,body,description,slug,title,member_id)
-VALUES ('2022-08-11 11:28:27.035704','2022-08-11 11:28:27.035704','You have to believe2','Ever wonder how2?','how-to-train-your-dragon2','How to train your dragon2',2);
+VALUES ('2022-08-11 11:29:27.035704','2022-08-11 11:29:27.035704','You have to believe2','Ever wonder how2?','how-to-train-your-dragon2','How to train your dragon2',2);
 INSERT INTO ARTICLE (create_date,update_date,body,description,slug,title,member_id)
-VALUES ('2022-08-11 11:28:27.035704','2022-08-11 11:28:27.035704','You have to believe3','Ever wonder how3?','how-to-train-your-dragon3','How to train your dragon3',3);
+VALUES ('2022-08-11 11:30:27.035704','2022-08-11 11:30:27.035704','You have to believe3','Ever wonder how3?','how-to-train-your-dragon3','How to train your dragon3',3);
 
 INSERT INTO article_favorite (article_id,member_id) VALUES (1,1);
 INSERT INTO article_favorite (article_id,member_id) VALUES (1,2);
@@ -31,9 +31,11 @@ INSERT INTO TAG (name) VALUES ('dragons');
 INSERT INTO article_tag (article_id,tag_id) VALUES (1,1);
 INSERT INTO article_tag (article_id,tag_id) VALUES (1,2);
 INSERT INTO article_tag (article_id,tag_id) VALUES (1,3);
+
 INSERT INTO article_tag (article_id,tag_id) VALUES (2,1);
 INSERT INTO article_tag (article_id,tag_id) VALUES (2,2);
-INSERT INTO article_tag (article_id,tag_id) VALUES (1,1);
+
+INSERT INTO article_tag (article_id,tag_id) VALUES (3,1);
 
 INSERT INTO comment (create_date,update_date,body,article_id,member_id) VALUES ('2022-08-16 08:35:29.263921','2022-08-16 08:35:29.263921','comment test by member 1',1,1);
 INSERT INTO comment (create_date,update_date,body,article_id,member_id) VALUES ('2022-08-16 08:36:29.263921','2022-08-16 08:36:29.263921','comment test by member 2',1,2);

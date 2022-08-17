@@ -2,6 +2,7 @@ package com.kr.realworldspringboot2.article;
 
 import com.kr.realworldspringboot2.security.AuthMemberDTO;
 import lombok.RequiredArgsConstructor;
+import net.minidev.json.JSONObject;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
@@ -49,5 +50,13 @@ public class ArticleController {
                                         @AuthenticationPrincipal AuthMemberDTO authMemberDTO) {
         return articleService.deleteArticleFavorite(slug, authMemberDTO);
     }
+
+    @GetMapping("/api/articles")
+    public JSONObject getArticles(@ModelAttribute("articleSearch") ArticleSearch articleSearch,
+                                  @AuthenticationPrincipal AuthMemberDTO authMemberDTO) {
+        return articleService.getArticles(articleSearch,authMemberDTO);
+    }
+
+
 
 }

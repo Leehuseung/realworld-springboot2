@@ -46,7 +46,7 @@ public class Article extends BaseEntity {
     @Builder.Default
     private Set<ArticleFavorite> articleFavorites = new HashSet<>();
 
-    private List<String> getTagList() {
+    public List<String> getTagList() {
         List<String> list = new ArrayList<>();
         for (int i = 0; i < articleTags.size(); i++) {
             list.add(articleTags.get(i).getTag().getName());

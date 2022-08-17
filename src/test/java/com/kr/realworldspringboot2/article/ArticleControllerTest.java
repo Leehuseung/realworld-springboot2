@@ -289,4 +289,68 @@ class ArticleControllerTest {
                 .andExpect(jsonPath("$.article.favoritesCount").value(2));
     }
 
+    @Test
+    @DisplayName("글 리스트 조회 테스트")
+    public void list_articles_none_search(@Autowired MockMvc mvc) throws Exception {
+        mvc.perform(get("/api/articles"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.articles[0].slug").value("how-to-train-your-dragon3"))
+                .andExpect(jsonPath("$.articles[0].author.username").value("test03"))
+                .andExpect(jsonPath("$.articles[0].tagList[0]").value("reactjs"))
+                .andExpect(jsonPath("$.articles[1].slug").value("how-to-train-your-dragon2"))
+                .andExpect(jsonPath("$.articles[1].author.username").value("test02"))
+                .andExpect(jsonPath("$.articles[1].tagList[0]").value("reactjs"))
+                .andExpect(jsonPath("$.articles[1].tagList[1]").value("angularjs"))
+                .andExpect(jsonPath("$.articles[2].slug").value("how-to-train-your-dragon"))
+                .andExpect(jsonPath("$.articles[2].author.username").value("test01"))
+                .andExpect(jsonPath("$.articles[2].tagList[0]").value("reactjs"))
+                .andExpect(jsonPath("$.articles[2].tagList[1]").value("angularjs"))
+                .andExpect(jsonPath("$.articles[2].tagList[2]").value("dragons"))
+                .andExpect(jsonPath("$.articlesCount").value(3));
+    }
+
+    @Test
+    @DisplayName("글 리스트 조회 limit,offset 테스트")
+    public void list_articles_limit(@Autowired MockMvc mvc) throws Exception {
+        mvc.perform(get("/api/articles?limit=1&offset=1"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.articles[0].slug").value("how-to-train-your-dragon2"))
+                .andExpect(jsonPath("$.articles[0].author.username").value("test02"))
+                .andExpect(jsonPath("$.articles[0].tagList[0]").value("reactjs"))
+                .andExpect(jsonPath("$.articles[0].tagList[1]").value("angularjs"))
+                .andExpect(jsonPath("$.articles[1]").doesNotHaveJsonPath());
+    }
+
+    @Test
+    @DisplayName("글 리스트 조회 Author Filter Test")
+    public void list_articles_author(@Autowired MockMvc mvc) throws Exception {
+        mvc.perform(get("/api/articles?author=test02"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.articles[0].slug").value("how-to-train-your-dragon2"))
+                .andExpect(jsonPath("$.articles[0].author.username").value("test02"))
+                .andExpect(jsonPath("$.articles[0].tagList[0]").value("reactjs"))
+                .andExpect(jsonPath("$.articles[0].tagList[1]").value("angularjs"))
+                .andExpect(jsonPath("$.articlesCount").value(1));
+    }
+
+    @Test
+    @DisplayName("글 리스트 조회 Tag Filter Test")
+    public void list_articles_tag(@Autowired MockMvc mvc) throws Exception {
+        mvc.perform(get("/api/articles?tag=dragons"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.articles[0].slug").value("how-to-train-your-dragon"))
+                .andExpect(jsonPath("$.articles[0].author.username").value("test01"))
+                .andExpect(jsonPath("$.articlesCount").value(1));
+    }
+
+    @Test
+    @DisplayName("글 리스트 조회 favorite Filter Test")
+     public void list_articles_favorite(@Autowired MockMvc mvc) throws Exception {
+        mvc.perform(get("/api/articles?favorited=test01"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.articles[0].slug").value("how-to-train-your-dragon"))
+                .andExpect(jsonPath("$.articles[0].author.username").value("test01"))
+                .andExpect(jsonPath("$.articlesCount").value(1));
+    }
+
 }

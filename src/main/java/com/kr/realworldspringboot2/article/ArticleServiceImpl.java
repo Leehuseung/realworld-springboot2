@@ -10,6 +10,7 @@ import com.kr.realworldspringboot2.member.Member;
 import com.kr.realworldspringboot2.member.MemberRepository;
 import com.kr.realworldspringboot2.security.AuthMemberDTO;
 import lombok.RequiredArgsConstructor;
+import net.minidev.json.JSONObject;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -22,6 +23,7 @@ public class ArticleServiceImpl implements ArticleService {
     private final ArticleRepository articleRepository;
     private final TagRepository tagRepository;
     private final ArticleTagRepository articleTagRepository;
+    private final ArticleQueryRepository articleQueryRepository;
     private final ArticleFavoriteRepository articleFavoriteRepository;
     private final MemberRepository memberRepository;
 
@@ -114,6 +116,33 @@ public class ArticleServiceImpl implements ArticleService {
         article.getArticleFavorites().remove(articleFavorite);
         articleFavoriteRepository.deleteArticleFavoriteByArticleAndMember(article,loginMember);
         return article.toArticleDTO(loginMember);
+    }
+
+    @Override
+    public JSONObject getArticles(ArticleSearch articleSearch, AuthMemberDTO authMemberDTO) {
+        Member loginMember = authMemberDTO == null ? null : memberRepository.findById(authMemberDTO.getId()).orElse(null);
+        int cnt = 0;
+        List<Article> list = null;
+        if(articleSearch.getTag() != null){
+            list = articleQueryRepository.getArticleByTag(articleSearch);
+            cnt = articleQueryRepository.getArticleByTagCount(articleSearch);
+        } else if(articleSearch.getFavorited() != null){
+            list = articleQueryRepository.getArticleByFavorite(articleSearch);
+            cnt = articleQueryRepository.getArticleByFavoriteCount(articleSearch);
+        } else {
+            list = articleQueryRepository.getArticle(articleSearch);
+            cnt = articleQueryRepository.getArticleCount(articleSearch);
+        }
+
+        List<ArticleDTO> dtoList = new ArrayList<>();
+        for (Article article : list) {
+            dtoList.add(article.toArticleDTO(loginMember));
+        }
+
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("articlesCount",cnt);
+        jsonObject.put("articles",dtoList);
+        return jsonObject;
     }
 
     private void insertTag(Article article, List<String> tagList) {
