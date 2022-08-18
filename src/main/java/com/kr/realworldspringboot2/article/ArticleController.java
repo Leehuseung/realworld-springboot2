@@ -57,6 +57,10 @@ public class ArticleController {
         return articleService.getArticles(articleSearch,authMemberDTO);
     }
 
-
+    @GetMapping("/api/articles/feed")
+    public JSONObject getFeeds(@ModelAttribute("articleSearch") ArticleSearch articleSearch,
+                               @AuthenticationPrincipal AuthMemberDTO authMemberDTO) {
+        return articleService.getFeeds(articleSearch, authMemberDTO);
+    }
 
 }

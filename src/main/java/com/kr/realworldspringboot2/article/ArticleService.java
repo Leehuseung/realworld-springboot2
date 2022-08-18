@@ -20,6 +20,8 @@ public interface ArticleService {
 
     JSONObject getArticles(ArticleSearch articleSearch, AuthMemberDTO authMemberDTO);
 
+    JSONObject getFeeds(ArticleSearch articleSearch, AuthMemberDTO authMemberDTO);
+
     default Article registerArticleToEntity(RegisterArticleDTO registerArticleDTO) {
         Article article = Article.builder()
                 .title(registerArticleDTO.getTitle())

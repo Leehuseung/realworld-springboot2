@@ -353,4 +353,27 @@ class ArticleControllerTest {
                 .andExpect(jsonPath("$.articlesCount").value(1));
     }
 
+    @Test
+    @WithUserDetails("test01@realworld.com")
+    @DisplayName("피드 테스트")
+    public void feed_test(@Autowired MockMvc mvc) throws Exception {
+        mvc.perform(get("/api/articles/feed"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.articles[0].slug").value("how-to-train-your-dragon2"))
+                .andExpect(jsonPath("$.articles[0].title").value("How to train your dragon2"))
+                .andExpect(jsonPath("$.articles[0].description").value("Ever wonder how2?"))
+                .andExpect(jsonPath("$.articles[0].body").value("You have to believe2"))
+                .andExpect(jsonPath("$.articles[0].tagList[0]").value("reactjs"))
+                .andExpect(jsonPath("$.articles[0].tagList[1]").value("angularjs"))
+                .andExpect(jsonPath("$.articles[0].createdAt").isNotEmpty())
+                .andExpect(jsonPath("$.articles[0].updatedAt").isNotEmpty())
+                .andExpect(jsonPath("$.articles[0].favorited").value(false))
+                .andExpect(jsonPath("$.articles[0].author.username").value("test02"))
+                .andExpect(jsonPath("$.articles[0].author.following").value(true))
+                .andExpect(jsonPath("$.articles[0].author.bio").hasJsonPath())
+                .andExpect(jsonPath("$.articles[0].author.image").hasJsonPath())
+                .andExpect(jsonPath("$.articlesCount").value(1));
+    }
+
+
 }

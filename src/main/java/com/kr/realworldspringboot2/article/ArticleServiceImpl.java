@@ -134,6 +134,18 @@ public class ArticleServiceImpl implements ArticleService {
             cnt = articleQueryRepository.getArticleCount(articleSearch);
         }
 
+        return getJsonObject(list, cnt, loginMember);
+    }
+
+    @Override
+    public JSONObject getFeeds(ArticleSearch articleSearch, AuthMemberDTO authMemberDTO) {
+        Member loginMember = authMemberDTO == null ? null : memberRepository.findById(authMemberDTO.getId()).orElse(null);
+        int cnt = articleQueryRepository.getFeedsCount(loginMember);
+        List<Article> list = articleQueryRepository.getFeeds(articleSearch,loginMember);
+        return getJsonObject(list, cnt, loginMember);
+    }
+
+    private JSONObject getJsonObject(List<Article> list, int cnt, Member loginMember) {
         List<ArticleDTO> dtoList = new ArrayList<>();
         for (Article article : list) {
             dtoList.add(article.toArticleDTO(loginMember));
