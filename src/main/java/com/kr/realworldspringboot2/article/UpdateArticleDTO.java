@@ -17,7 +17,6 @@ public class UpdateArticleDTO {
     private String title;
     private String description;
     private String body;
-    private List<String> tagList;
 
     void applyTo(Article article) {
         if(this.getTitle() != null) {

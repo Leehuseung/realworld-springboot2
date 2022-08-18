@@ -62,13 +62,7 @@ public class ArticleServiceImpl implements ArticleService {
             throw new NotUserOwnException("article");
         }
 
-        List<String> tagList = updateArticleDTO.getTagList();
         articleTagRepository.deleteArticleTagsByArticle(article);
-        article.setArticleTags(new ArrayList<>());
-        if(tagList != null){
-            insertTag(article, tagList);
-        }
-
         updateArticleDTO.applyTo(article);
         articleRepository.save(article);
         return article.toArticleDTO(loginMember);
