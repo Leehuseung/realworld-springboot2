@@ -1,4 +1,4 @@
-package com.kr.realworldspringboot2.article;
+ package com.kr.realworldspringboot2.article;
 
 import com.kr.realworldspringboot2.article.favorite.ArticleFavorite;
 import com.kr.realworldspringboot2.member.BaseEntity;
@@ -39,6 +39,7 @@ public class Article extends BaseEntity {
     private Member member;
 
     @OneToMany(mappedBy = "article", cascade = {CascadeType.REMOVE})
+    @OrderBy("createdAt DESC")
     @Builder.Default
     private List<ArticleTag> articleTags = new ArrayList<>();
 

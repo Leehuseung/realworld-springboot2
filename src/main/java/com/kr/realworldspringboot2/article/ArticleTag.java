@@ -1,6 +1,7 @@
 package com.kr.realworldspringboot2.article;
 
 import com.kr.realworldspringboot2.article.tag.Tag;
+import com.kr.realworldspringboot2.member.BaseEntity;
 import lombok.*;
 
 import javax.persistence.*;
@@ -11,7 +12,7 @@ import javax.persistence.*;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class ArticleTag {
+public class ArticleTag extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
