@@ -188,9 +188,6 @@ class ArticleControllerTest {
         article.put("title","update test");
         article.put("description","test description update");
         article.put("body","test body update");
-        tags.add("updateTag1");
-        tags.add("updateTag2");
-        article.put("tagList",tags);
         body.put("article",article);
 
         mvc.perform(put("/api/articles/how-to-train-your-dragon").contentType(MediaType.APPLICATION_JSON).content(body.toString()))
@@ -199,8 +196,6 @@ class ArticleControllerTest {
                 .andExpect(jsonPath("$.article.title").value("update test"))
                 .andExpect(jsonPath("$.article.description").value("test description update"))
                 .andExpect(jsonPath("$.article.body").value("test body update"))
-                .andExpect(jsonPath("$.article.tagList[0]").value("updateTag1"))
-                .andExpect(jsonPath("$.article.tagList[1]").value("updateTag2"))
                 .andExpect(jsonPath("$.article.createdAt").isNotEmpty())
                 .andExpect(jsonPath("$.article.updatedAt").isNotEmpty())
                 .andExpect(jsonPath("$.article.favorited").value(true))
@@ -209,44 +204,6 @@ class ArticleControllerTest {
                 .andExpect(jsonPath("$.article.author.following").value(false))
                 .andExpect(jsonPath("$.article.author.bio").hasJsonPath())
                 .andExpect(jsonPath("$.article.author.image").hasJsonPath());
-    }
-
-    @Test
-    @WithUserDetails("test01@realworld.com")
-    @DisplayName("글 태그 수정 테스트")
-    public void update_tags_article(@Autowired MockMvc mvc) throws Exception {
-        //given
-        JSONObject body = new JSONObject();
-        JSONObject article = new JSONObject();
-        JSONArray tags = new JSONArray();
-        tags.add("reactjs");
-        tags.add("updateTag1");
-        article.put("tagList",tags);
-        body.put("article",article);
-
-        mvc.perform(put("/api/articles/how-to-train-your-dragon").contentType(MediaType.APPLICATION_JSON).content(body.toString()))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.article.tagList[0]").value("reactjs"))
-                .andExpect(jsonPath("$.article.tagList[1]").value("updateTag1"));
-    }
-
-    @Test
-    @WithUserDetails("test01@realworld.com")
-    @DisplayName("글 태그 삭제 수정")
-    public void update_tags_not_change_article(@Autowired MockMvc mvc) throws Exception {
-        //given
-        JSONObject body = new JSONObject();
-        JSONObject article = new JSONObject();
-        JSONArray tags = new JSONArray();
-        article.put("title","update test");
-        article.put("description","test description update");
-        article.put("body","test body update");
-        article.put("tagList",tags);
-        body.put("article",article);
-
-        mvc.perform(put("/api/articles/how-to-train-your-dragon").contentType(MediaType.APPLICATION_JSON).content(body.toString()))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.article.tagList").isEmpty());
     }
 
     @Test
