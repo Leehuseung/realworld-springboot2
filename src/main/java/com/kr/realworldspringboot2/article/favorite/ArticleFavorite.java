@@ -18,15 +18,15 @@ public class ArticleFavorite {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "favorite_id")
-    Long id;
+    private Long id;
 
     @ManyToOne
     @JoinColumn(name = "article_id")
-    Article article;
+    private Article article;
 
     @ManyToOne
     @JoinColumn(name = "member_id")
-    Member member;
+    private Member member;
 
     @Override
     public boolean equals(Object o) {
